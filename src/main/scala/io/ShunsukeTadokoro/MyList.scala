@@ -26,8 +26,13 @@ sealed trait MyList[+A] {
     case Cons(h, t) => f(h, t.foldRight(z)(f))
   }
 
+  def reverse: MyList[A] = this.foldLeft(MyList[A]())((acc, h) => Cons(h, acc))
+
   def foldRight2[B](z: B)(f: (A, B) => B): B =
-    this.foldLeft((b:B) => b)((g, a) => b => g(f(a, b), g))
+    this.reverse.foldLeft(z)((acc, h) => f(h, acc))
+
+  def foldRight3[B](z: B)(f: (A, B) => B): B =
+    this.foldLeft((b: B) => b)((bf, h) => b => bf(f(h, z)))(z)
 
   def length: Int = foldLeft(0)((acc, _) => acc + 1)
 
