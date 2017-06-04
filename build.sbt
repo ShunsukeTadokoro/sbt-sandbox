@@ -4,18 +4,11 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+
 libraryDependencies ++= Seq(
-
-  "org.scalaz"                      %% "scalaz-core"       % "7.2.0",
-  "org.scala-lang.modules"          %% "scala-xml"         % "1.0.5",
-  "org.jsoup"                        % "jsoup"             % "1.8.1",
-  "org.hjson"                        % "hjson"             % "1.1.2",
-  "com.typesafe.play"               %% "play-json"         % "2.4.6",
-  "com.googlecode.juniversalchardet" % "juniversalchardet" % "1.0.3",
-  "org.scalatest"                   %% "scalatest"         % "2.2.6" % "test"
+  "io.frees" %% "freestyle" % "0.2.0"
 )
-
-enablePlugins(JmhPlugin)
 
 resolvers ++= Seq(
   "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
