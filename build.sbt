@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
   "org.jsoup"                        % "jsoup"             % "1.8.1",
   "org.hjson"                        % "hjson"             % "1.1.2",
   "com.typesafe.play"               %% "play-json"         % "2.4.6",
-  "com.googlecode.juniversalchardet" % "juniversalchardet" % "1.0.3",
+ "com.googlecode.juniversalchardet" % "juniversalchardet" % "1.0.3",
   "org.scalatest"                   %% "scalatest"         % "2.2.6" % "test"
 )
 
