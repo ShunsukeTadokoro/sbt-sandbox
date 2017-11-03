@@ -1,28 +1,42 @@
 package io.todokr.github
 
+import scala.util.parsing.combinator._
 /**
   * Created by todokr on 17/08/17.
   */
-object Main {
+object Main extends App {
 
-  def convert[T: Emphasize](x: T): String = implicitly[Emphasize[T]].strong(x).name
+  val input =
+    """
+      |types {
+      |   # hoge
+      |  application/atom+xml                  atom;
+      |  application/json                      json map topojson;
+      |  application/ld+json                   jsonld;
+      |  application/rss+xml                   rss;
+      |  application/vnd.geo+json              geojson;
+      |  application/xml                       rdf xml;
+      |}
+    """.stripMargin
 
-  def main(args: Array[String]): Unit = {
-    val as = Seq(BeforeA("john"), BeforeA("paul"), BeforeA("george"), BeforeA("ringo"))
-    val bs = Seq(BeforeB("inaba"), BeforeB("matsumoto"))
+  object MimeConfParser extends RegexParsers {
 
-    implicit val emphasizeA = new Emphasize[BeforeA] {
-      override def strong(x: BeforeA): After = After(s"<strong>${x.name}</strong>")
-      override def bold(x: BeforeA): After = After(s"<b>${x.name}</b>")
+    override val whiteSpace = """(\s|#.*)+""".r
+
+    // values
+    def key = """[\w\./+-]+""".r
+    def value = repsep("""[\w\./+-]+""".r, """\s?""".r)
+    def line = key ~ value <~ ";"
+    def list = """types\s*\{""".r ~> rep(line) <~ "}"
+
+    def parse(in: String): Map[String, Seq[String]] = parseAll(list, in) match {
+      case Success(result, _) => result.map(x => x._1 -> x._2).toMap
+      case NoSuccess(msg, next) => throw new Exception(s"$msg on line ${next.pos.line} on column ${next.pos.column}")
     }
-
-    implicit val emphasizeB = new Emphasize[BeforeB] {
-      override def strong(x: BeforeB): After = After(s"${x.name}!!!!!!!!!!!!!!!!!!!!")
-      override def bold(x: BeforeB): After = After(s"☆☆${x.name}☆☆")
-    }
-
-    println(as.map(convert(_)))
-    println(bs.map(convert(_)))
   }
 
+  MimeConfParser.parse(input)
+
+
+  println(MimeConfParser.parse(input))
 }
